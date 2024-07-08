@@ -33,15 +33,15 @@
         </div>
 
         <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
+            {{-- @if (Route::has('password.request'))
                 <a class="underline text-sm text-gray-600 hover:text-gray-900  rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 " href="{{ route('password.request') }}">
                     {{ __('Olvidaste tu contraseña?') }}
                 </a>
-            @endif
+            @endif --}}
 
-                <a class="inline-flex items-center px-2 py-2 bg-white  border border-gray-500  rounded-md font-semibold text-xs  uppercase tracking-widest shadow-sm hover:bg-gray-100  focus:outline-none ms-3 no-underline  text-gray-600 hover:text-gray-900  " href="{{ route('register') }}">
+                {{-- <a class="inline-flex items-center px-2 py-2 bg-white  border border-gray-500  rounded-md font-semibold text-xs  uppercase tracking-widest shadow-sm hover:bg-gray-100  focus:outline-none ms-3 no-underline  text-gray-600 hover:text-gray-900  " href="{{ route('register') }}">
                     {{ __('Registrarme') }}
-                </a>
+                </a> --}}
             <x-primary-button class="ms-3">
                 {{ __('Ingresar') }}
             </x-primary-button>
