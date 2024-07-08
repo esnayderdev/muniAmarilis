@@ -13,6 +13,7 @@ class Deliverable extends Model
         'nombre',
         'descripcion',
         'fecha_entrega',
+        'estado',
         'activity_id'
     ];
 
