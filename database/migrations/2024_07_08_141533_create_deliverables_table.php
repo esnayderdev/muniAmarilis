@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nombre');
             $table->string('descripcion')->nullable();
             $table->date('fecha_entrega');
+            $table->boolean('estado')->default(false);
             $table->foreignId('activity_id')->constrained('activities')->onDelete('cascade');
             $table->timestamps();
         });
