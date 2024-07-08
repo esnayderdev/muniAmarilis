@@ -13,15 +13,12 @@ return new class extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
-            $table->string('name_project', 255);
-            $table->text('description');
-            $table->date('fecha_inicio');
-            $table->date('fecha_fin');
-            $table->string('status', 55);
-            $table->unsignedBigInteger('encargado_id');
+            $table->string('nombre', 100)->unique();
+            $table->text('descripcion')->nullable();
+            $table->string('tipo')->nullable();
+            $table->decimal('presupuesto', 10, 2)->nullable();
+            $table->string('estado')->default('no confirmado'); // No confirmado, confirmado, Terminado
             $table->timestamps();
-
-            $table->foreign('encargado_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

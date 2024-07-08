@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('historial_estados', function (Blueprint $table) {
+        Schema::create('deliverables', function (Blueprint $table) {
             $table->id();
-            $table->string('estado', 50);
-            $table->dateTime('fecha_cambio');
-            $table->text('comentarios')->nullable();
-            $table->unsignedBigInteger('activity_id');
+            $table->string('nombre');
+            $table->string('descripcion')->nullable();
+            $table->date('fecha_entrega');
+            $table->boolean('estado')->default(false);
+            $table->foreignId('activity_id')->constrained('activities')->onDelete('cascade');
             $table->timestamps();
-
-            $table->foreign('activity_id')->references('id')->on('actividades')->onDelete('cascade');
         });
     }
 
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('historial_estados');
+        Schema::dropIfExists('deliverables');
     }
 };
