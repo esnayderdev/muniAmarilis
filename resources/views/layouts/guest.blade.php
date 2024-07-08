@@ -15,10 +15,10 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-700">
-            <div class="border border-gray-200 px-20 py-4 rounded-lg bg-white">
-                <a href="/" class="text-2xl font-semibold">
-                    AMARILIS SEGUIMIENTO
+        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-3 sm:pt-0 bg-gray-700">
+            <div class="border border-gray-200 p-2 rounded-full bg-white">
+                <a href="/" >
+                    <img src="{{ asset('logo.png') }}" alt="logo-amarilis" class="w-44 rounded-full">
                 </a>
             </div>
 

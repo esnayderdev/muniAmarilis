@@ -5,10 +5,8 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a @if (auth()->user()->usertype == 'admin') href ="{{ route('admin.dashboard') }}" @else href="{{ route('dashboard') }}" @endif
-                        class="text-md font-semibold text-wrap">
-                        AMARILIS 
-                        <p class="text-primary-500">.Plan</p>
+                    <a @if (auth()->user()->usertype == 'admin') href ="{{ route('admin.dashboard') }}" @else href="{{ route('dashboard') }}" @endif                        >
+                        <img src="{{ asset('logo.png') }}" alt="logo-amarilis" class="w-14 rounded-full">
                     </a>
                 </div>
 
