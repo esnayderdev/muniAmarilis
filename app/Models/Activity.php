@@ -20,12 +20,12 @@ class Activity extends Model
 
     public function project()
     {
-        return $this->belongsToMany(Project::class);
+        return $this->belongsTo(Project::class);
     }
 
     public function manager()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function deliverable()
