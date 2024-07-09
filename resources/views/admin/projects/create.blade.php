@@ -1,6 +1,12 @@
 <x-app-layout>
-    <div class="flex flex-col items-center justify-center mx-auto md:px-32 sm:px-12 lg:px-40 xl:px-80 py-12">
 
+    @if (session('success'))
+        <div class="fixed top-24 right-10 bg-green-400 text-black shadow-md rounded-md p-3 z-50 text-sm">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    <div class="flex flex-col items-center justify-center mx-auto md:px-32 sm:px-12 lg:px-40 xl:px-80 py-12">
         <div class="w-full bg-white shadow-lg rounded-lg p-6 mt-6 overflow-hidden border border-gray-500">
             <form method="POST" action="{{ route('admin.projects.store') }}" class="flex flex-col">
                 @csrf
@@ -39,11 +45,6 @@
                 </div>
 
                 <div class="flex items-center justify-end mt-4">
-                    @if (session('success'))
-                        <p class="w-auto bg-green-400 shadow-sm rounded-sm p-1">
-                           ✅ {{ session('success') }}
-                        </p>
-                    @endif
                     <x-primary-button class="ms-4">
                         {{ __('Guardar') }}
                     </x-primary-button>
