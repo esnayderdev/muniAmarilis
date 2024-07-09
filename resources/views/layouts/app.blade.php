@@ -31,6 +31,11 @@
             <main>
                 {{ $slot }}
             </main>
+
+            @isset($js)
+                {{ $js }}
+            @endisset
+
         </div>
     </body>
 </html>

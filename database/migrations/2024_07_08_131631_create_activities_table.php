@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('activities', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre')->unique();
+            $table->string('nombre');
             $table->string('estado')->default('en progreso'); // en progreso, completado, retrasado
             $table->date('fecha_inicio')->nullable();
             $table->date('fecha_fin')->nullable();
             $table->foreignId('project_id')->constrained('projects')->onDelete('cascade');
-            $table->unsignedBigInteger('manager_id');
+            $table->unsignedBigInteger('manager_id')->nullable();
             $table->foreign('manager_id', 'fk_activities_manager_id')
                 ->references('id')->on('users'); // llave foranea para el encargado
             $table->timestamps();
