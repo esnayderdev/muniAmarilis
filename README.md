@@ -14,7 +14,16 @@
     ```
     - Si sale error intenta con 
     ```bash
-    php artisan migrate:refresh 
+    php artisan migrate:fresh
+    ```
+
+    - Si quieres crear usuarios por defecto
+    ```bash
+    php artisan migrate:refresh --seed
+    ```
+    - Si sale error intenta con 
+    ```bash
+    php artisan migrate:fresh --seed
     ```
     
 3. **crea y configura archivo .env**
