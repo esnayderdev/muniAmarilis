@@ -35,21 +35,32 @@
                     </x-slot>
                 </x-dropdown> --}}
             </div>
-            <div class="relative ">
-                <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                    </svg>
+            <div class="flex">
+                <form action="{{ route('admin.projects.index') }}" method="GET" class="mb-4 flex" id="formSearch">
+                    <div class="relative ">
+                        <div
+                            class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                            </svg>
+                        </div>
+                        <input type="text" value="{{ request('search') }}" name="search" id="search"
+                            class="block p-2 ps-10 text-sm text-gray-900 border border-gray-400 rounded-lg w-80 bg-gray-50 focus:ring-green-500 focus:border-green-500 "
+                            placeholder="Buscar por nombre del proyecto">
+                    </div>
+                    <button type="submit" class="bg-green-600 text-white rounded-md p-2 ml-2">Buscar</button>
+                </form>
+                <div class="mb-4">
+                    <button type="button" class="bg-gray-600 text-white rounded-md p-2 ml-2"
+                        onclick="cleanSearch()">Limpiar</button>
                 </div>
-                <input type="text" id="table-search-users"
-                    class="block p-2 ps-10 text-sm text-gray-900 border border-gray-400 rounded-lg w-80 bg-gray-50 focus:ring-green-500 focus:border-green-500 "
-                    placeholder="Buscar por nombre">
             </div>
+
         </div>
         <table class="w-full text-sm text-left rtl:text-right text-gray-800 border border-gray-400">
-            <thead class="text-xs text-gray-100 uppercase bg-gray-500">
+            <thead class="text-xs text-gray-100 uppercase bg-gray-500 ">
                 <tr>
                     <th scope="col" class="px-6 py-3">
                         Nombre
@@ -98,13 +109,10 @@
                                     <select name="estado_proyecto"
                                         class="border border-green-400 rounded-md py-0 px-3 w-full focus:border-green-500"
                                         onchange="submitFormProject(event, {{ $project->id }})">
-                                        <option value="">Asigna un encargado</option>
                                         @foreach ($estados_proyecto as $estado)
                                             <option value="{{ $estado }}"
                                                 {{ $estado == $project->estado ? 'selected' : '' }}>
-                                                <div
-                                                    class="h-2.5 w-2.5 rounded-full me-2 @if ($estado == 'no confirmado') bg-red-400  @elseif ($estado == 'confirmado') bg-yellow-400 @else  bg-green-400 @endif ">
-                                                </div> {{ $estado }}
+                                                {{ $estado }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -113,7 +121,10 @@
                             </div>
                         </td>
 
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 flex gap-2">
+                            <button
+                                class="cursor-pointer font-medium bg-lime-700 text-gray-100 px-3 py-1 rounded-md hover:no-underline hover:bg-lime-600">Añadir
+                                actividad</button>
                             <button data-project-id="{{ $project->id }}"
                                 class="cursor-pointer font-medium bg-green-600 text-gray-100 px-3 py-1 rounded-md hover:no-underline hover:bg-green-700">Ver
                                 actividades</button>
@@ -122,10 +133,10 @@
                     <tr class="activity-row hidden bg-gray-100" data-project-id="{{ $project->id }}">
                         <td colspan="6" class="p-4">
                             <table
-                                class="w-10/12 text-sm text-left rtl:text-right text-gray-800 border border-gray-400 ">
+                                class="w-full text-sm text-left rtl:text-right text-gray-800 border border-gray-400 ">
                                 <thead class="text-xs text-gray-100 uppercase bg-green-700">
                                     <tr>
-                                        <th scope="col" class="px-6 py-1">Nombre de Actividad</th>
+                                        <th scope="col" class="px-6 py-1">Nombre</th>
                                         <th scope="col" class="px-6 py-1">Estado</th>
                                         <th scope="col" class="px-6 py-1">Fecha de Inicio</th>
                                         <th scope="col" class="px-6 py-1">Fecha de Fin</th>
@@ -134,9 +145,16 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($project->activities as $activity)
-                                        <tr class="border-b border-gray-300">
+                                        <tr class="border border-gray-300 bg-white">
                                             <td class="px-6 py-2">{{ $activity->nombre }}</td>
-                                            <td class="px-6 py-2">{{ $activity->estado }}</td>
+                                            <td class="px-6 py-2 flex items-center">
+                                                <div
+                                                    class="h-3 w-3 rounded-full me-2 @if ($activity->estado == 'retrasado') bg-red-400  @elseif ($activity->estado == 'en progreso') bg-yellow-400 @else  bg-green-400 @endif ">
+                                                </div>
+                                                <span>
+                                                    {{ $activity->estado }}
+                                                </span>
+                                            </td>
                                             <td class="px-6 py-2">
                                                 <input type="date" name="fecha_inicio"
                                                     value="{{ $activity->fecha_inicio }}"
@@ -160,7 +178,7 @@
                                                     <select name="manager_id"
                                                         class="border border-green-400 rounded-md py-0 px-3 w-full focus:border-green-500"
                                                         onchange="submitForm(event, {{ $activity->id }})">
-                                                        <option value="">Asigna un encargado</option>
+                                                        <option value="">sin encargado</option>
                                                         @foreach ($encargados as $encargado)
                                                             <option value="{{ $encargado->id }}"
                                                                 {{ $encargado->id == $activity->manager_id ? 'selected' : '' }}>
@@ -177,9 +195,9 @@
                         </td>
                     </tr>
                 @empty
-                    <tr class="bg-white border-b text-gray-700  hover:bg-gray-50">
-                        <td class="w-4 p-4">
-                            <div class="flex items-center">
+                    <tr class="bg-white border border-gray-600 text-gray-700  hover:bg-gray-50">
+                        <td class="w-4 p-4" colspan="6">
+                            <div class="text-center">
                                 No hay proyectos registrados
                             </div>
                         </td>
@@ -205,7 +223,17 @@
                         }
                     });
                 });
+
+
             });
+
+            function cleanSearch() {
+                const formSearch = document.getElementById('formSearch');
+                const searchInput = document.getElementById('search');
+
+                searchInput.value = '';
+                formSearch.submit();
+            }
         </script>
 
         {{-- Script para asignar un encargado --}}
@@ -230,11 +258,17 @@
                             // Muestra una notificación de éxito (puedes personalizar esto según tus necesidades)
                             mensaje.innerHTML = data.message;
                             mensaje.classList.toggle('hidden');
+                            setTimeout(() => {
+                                mensaje.classList.toggle('hidden');
+                            }, 2000);
                         } else {
                             // Maneja los errores (puedes personalizar esto según tus necesidades)
                             mensaje.innerHTML = 'Error al asignar un encargado';
                             mensaje.classList.toggle('hidden');
                             mensaje.classList.add('bg-red-400')
+                            setTimeout(() => {
+                                mensaje.classList.toggle('hidden');
+                            }, 2000);
                         }
                     })
                     .catch(error => {
@@ -265,11 +299,17 @@
                             // Muestra una notificación de éxito (puedes personalizar esto según tus necesidades)
                             mensaje.innerHTML = data.message;
                             mensaje.classList.toggle('hidden');
+                            setTimeout(() => {
+                                mensaje.classList.toggle('hidden');
+                            }, 2000);
                         } else {
                             // Maneja los errores (puedes personalizar esto según tus necesidades)
                             mensaje.innerHTML = 'Error al asignar un encargado';
                             mensaje.classList.toggle('hidden');
                             mensaje.classList.add('bg-red-400')
+                            setTimeout(() => {
+                                mensaje.classList.toggle('hidden');
+                            }, 2000);
                         }
                     })
                     .catch(error => {
@@ -302,11 +342,17 @@
                             // Muestra una notificación de éxito (puedes personalizar esto según tus necesidades)
                             mensaje.innerHTML = data.message;
                             mensaje.classList.toggle('hidden');
+                            setTimeout(() => {
+                                mensaje.classList.toggle('hidden');
+                            }, 2000);
                         } else {
                             // Maneja los errores (puedes personalizar esto según tus necesidades)
                             mensaje.innerHTML = 'Error al actualizar fecha';
                             mensaje.classList.toggle('hidden');
                             mensaje.classList.add('bg-red-400')
+                            setTimeout(() => {
+                                mensaje.classList.toggle('hidden');
+                            }, 2000);
                         }
                     })
                     .catch(error => {

@@ -5,36 +5,37 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a @if (auth()->user()->usertype == 'admin') href ="{{ route('admin.dashboard') }}" @else href="{{ route('dashboard') }}" @endif                        >
+                    <a
+                        @if (auth()->user()->usertype == 'admin') href ="{{ route('admin.dashboard') }}" @else href="{{ route('manager.index') }}" @endif>
                         <img src="{{ asset('logo.png') }}" alt="logo-amarilis" class="w-14 rounded-full">
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
-                @if(auth()->user()->usertype == 'encargado')
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                </div>
+                @if (auth()->user()->usertype == 'encargado')
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('manager.index')" :active="request()->routeIs('manager.index')">
+                            {{ __('Dashboard') }}
+                        </x-nav-link>
+                    </div>
                 @endif
 
-                @if(auth()->user()->usertype == 'admin')
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('admin.projects.create')" :active="request()->routeIs('admin.projects.create')">
-                        {{ __('Crear proyectos') }}
-                    </x-nav-link>
-                </div>
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('admin.projects.index')" :active="request()->routeIs('admin.projects.index')">
-                        {{ __('Proyectos') }}
-                    </x-nav-link>
-                </div>
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
-                        {{ __('Historial de estado') }}
-                    </x-nav-link>
-                </div>
+                @if (auth()->user()->usertype == 'admin')
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('admin.projects.create')" :active="request()->routeIs('admin.projects.create')">
+                            {{ __('Crear proyectos') }}
+                        </x-nav-link>
+                    </div>
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('admin.projects.index')" :active="request()->routeIs('admin.projects.index')">
+                            {{ __('Proyectos') }}
+                        </x-nav-link>
+                    </div>
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                            {{ __('Historial de estado') }}
+                        </x-nav-link>
+                    </div>
                 @endif
             </div>
 
@@ -94,11 +95,13 @@
 
     <!-- Responsive Navigation Menu -->
     <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-        </div>
+        @if (auth()->user()->usertype == 'encargado')
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link :href="route('manager.index')" :active="request()->routeIs('manager.index')">
+                    {{ __('Dashboard') }}
+                </x-responsive-nav-link>
+            </div>
+        @endif
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">

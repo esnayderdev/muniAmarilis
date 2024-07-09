@@ -16,15 +16,26 @@ class ProjectController extends Controller
         'Entrega de proyecto',
     ];
 
-    public function index()
+    public function index(Request $request)
     {
-        $encargados = User::where('usertype', 'encargado')->get();
+        $search = $request->input('search');
+
         $estados_proyecto = [
             "no confirmado",
             "confirmado",
             "terminado"
         ];
-        $projects = Project::all();
+
+        $encargados = User::where('usertype', 'encargado')->get();
+        
+        $query = Project::query();
+
+        if ($search) {
+            $query->where('nombre', 'LIKE', "%{$search}%");
+        }
+
+        $projects = $query->get();
+
         return view('admin.projects.index', compact('projects', 'encargados', 'estados_proyecto'));
     }
 

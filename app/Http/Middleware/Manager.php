@@ -17,7 +17,7 @@ class Manager
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::user()->usertype != 'encargado') {
-            return redirect('admin/dashboard');
+            return redirect(route('admin.dashboard'));
         }
         return $next($request);
     }

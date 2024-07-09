@@ -12,6 +12,6 @@ class HomeController extends Controller
     }
 
     public function manager(){
-        return view('dashboard');
+        return view('manager.dashboard');
     }
 }
