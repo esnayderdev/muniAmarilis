@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@gmail.com',
             'usertype' => 'admin'
         ]);
+
+        User::factory(20)->create();
         
     }
 }
