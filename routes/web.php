@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\DeliverableController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -9,10 +10,6 @@ use App\Http\Controllers\ProjectController;
 Route::get('/', function () {
     return view('auth.login');
 });
-
-Route::get('/dashboard', [HomeController::class, 'manager'])
-    ->middleware(['auth', 'manager'])
-    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/perfil', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -34,5 +31,13 @@ Route::middleware('auth', 'admin')->group(function () {
     });
 });
 
+Route::middleware('auth', 'manager')->group(function () {
+    Route::controller(ActivityController::class)->group(function () {
+        Route::get('manager/activities', 'index')->name('manager.index');
+    });
+    Route::controller(DeliverableController::class)->group(function () {
+        Route::put('manager/deliverables/{id}', 'update')->name('manager.deliverable.update');
+    });
+});
 
 require __DIR__ . '/auth.php';

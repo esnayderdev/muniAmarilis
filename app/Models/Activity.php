@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -28,8 +29,18 @@ class Activity extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function deliverable()
+    public function deliverables()
     {
         return $this->hasMany(Deliverable::class);
+    }
+
+    public function getFechaFinFormattedAttribute()
+    {
+        return Carbon::parse($this->attributes['fecha_fin'])->format('d-m-Y');
+    }
+    
+    public function getFechaInicioFormattedAttribute()
+    {
+        return Carbon::parse($this->attributes['fecha_inicio'])->format('d-m-Y');
     }
 }

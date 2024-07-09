@@ -21,5 +21,4 @@ class Deliverable extends Model
     {
         return $this->hasMany(Activity::class);
     }
-
 }
