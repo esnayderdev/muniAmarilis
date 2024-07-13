@@ -32,4 +32,32 @@ class DeliverableController extends Controller
             return response()->json(['success' => true, 'message' => $message]);
         }
     }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nombre' => 'required',
+            'descripcion' => 'required',
+            'fecha_entrega' => 'required|date',
+            'estado' => 'nullable',
+            'activity_id' => 'required|exists:activities,id',
+        ], [
+            'activity_id.exists' => 'El campo :attribute no existe',
+            'activity_id.required' => 'El campo :attribute es obligatorio',
+            'fecha_entrega.required' => 'El campo :attribute es obligatorio',
+            'fecha_entrega.date' => 'El campo :attribute debe ser una fecha válida',
+            'nombre.required' => 'El campo :attribute es obligatorio',
+            'descripcion.required' => 'El campo :attribute es obligatorio',
+        ]);
+
+        $deliverable = Deliverable::create([
+            'nombre' => $request->input('nombre'),
+            'descripcion' => $request->input('descripcion'),
+            'fecha_entrega' => $request->input('fecha_entrega'),
+            'estado' => $request->input('estado') === null ? 0 : 1,
+            'activity_id' => $request->input('activity_id'),
+        ]);
+
+        return redirect()->route('manager.index')->with('success', 'Entregable creado correctamente');
+    }
 }

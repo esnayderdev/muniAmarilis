@@ -11,6 +11,8 @@ class ActivityController extends Controller
     {
         $search = $request->input('search');
         
+        Activity::actualizarEstados(); // Actualiza el estado de las actividades a 'retrasado' si se ha pasado de la fecha fin
+
         $query = Activity::query();
         
         if ($search) {
@@ -20,6 +22,41 @@ class ActivityController extends Controller
         $activities = $query->where('manager_id', auth()->user()->id)->get();
 
         return view('manager.dashboard', compact('activities'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nombre' => 'required|string|unique:activities,nombre',
+            'estado' => 'required|string',
+            'fecha_inicio' => 'required|date',
+            'fecha_fin' => 'required|date|after:fecha_inicio',
+            'project_id' => 'required|exists:projects,id',
+            'manager_id' => 'required|exists:users,id',
+         
+        ], [
+            'nombre.required' => 'El campo :attribute es obligatorio',
+            'nombre.unique' => 'El campo :attribute ya existe',
+            'estado.required' => 'El campo :attribute es obligatorio',
+            'project_id.required' => 'El campo :attribute es obligatorio',
+            'manager_id.required' => 'El campo :attribute es obligatorio',
+            'manager_id.exists' => 'El campo :attribute no existe',
+            'project_id.exists' => 'El campo :attribute no existe',
+            'fecha_inicio.required' => 'El campo :attribute es obligatorio',
+            'fecha_fin.required' => 'El campo :attribute es obligatorio',
+            'fecha_fin.after' => 'La fecha fin debe ser posterior a la fecha inicio',
+        ]);
+
+        $actividad = new Activity();
+        $actividad->nombre = $request->input('nombre');
+        $actividad->estado = $request->input('estado');
+        $actividad->manager_id = $request->input('manager_id');
+        $actividad->project_id = $request->input('project_id');
+        $actividad->fecha_inicio = $request->input('fecha_inicio');
+        $actividad->fecha_fin = $request->input('fecha_fin');
+        $actividad->save();
+
+        return redirect()->route('admin.projects.index')->with('success', 'Actividad creada correctamente');
     }
 
     public function update(Request $request, $id)

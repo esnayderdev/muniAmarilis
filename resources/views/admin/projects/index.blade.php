@@ -1,39 +1,21 @@
 <x-app-layout>
     <div class="hidden fixed top-24 right-10 bg-green-400 text-black shadow-md rounded-md p-3 z-50 text-sm"
         id="mensaje">
-
     </div>
+    
+    @if (session('success'))
+        <div class="fixed top-24 right-10 bg-green-400 text-black shadow-md rounded-md p-3 z-50 text-sm" id="mensajeStatic">
+            {{ session('success') }}
+        </div>
+    @endif
     <div class="relative overflow-x-auto sm:rounded-lg p-5 m-4">
         <div
             class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-5 md:space-y-0 pb-4 pt-4 px-4  mb-4">
             <div>
-                {{-- <x-dropdown align="left" width="48">
-                    <x-slot name="trigger">
-                        <button
-                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium  border-gray-400 rounded-lg  bg-gray-50 hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <div>Seleccione un tipo</div>
+                <x-danger-button x-data=""
+                    x-on:click.prevent="$dispatch('open-modal', {'id': 'create-project'})">{{ __('Crear nuevo proyecto') }}</x-danger-button>
 
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-                    </x-slot>
-
-                    <x-slot name="content">
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <x-dropdown-link :href="route('logout')"
-                                onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Salir') }}
-                            </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown> --}}
+                @include('admin.projects.partials.modals.project-create')
             </div>
             <div class="flex">
                 <form action="{{ route('admin.projects.index') }}" method="GET" class="mb-4 flex" id="formSearch">
@@ -57,158 +39,12 @@
                         onclick="cleanSearch()">Limpiar</button>
                 </div>
             </div>
-
         </div>
-        <table class="w-full text-sm text-left rtl:text-right text-gray-800 border border-gray-400">
-            <thead class="text-xs text-gray-100 uppercase bg-gray-500 ">
-                <tr>
-                    <th scope="col" class="px-6 py-3">
-                        Nombre
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Descripcion
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Tipo
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Presupuesto
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Estado
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Accion
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($projects as $project)
-                    <tr class="bg-white hover:bg-gray-200">
-                        <td class="px-6 py-4">
-                            {{ $project->nombre }}
-                        </td>
-                        <td class="px-6 py-4">
-                            {{ $project->descripcion }}
-                        </td>
-
-                        <td class="px-6 py-4">
-                            {{ $project->tipo }}
-
-                        </td>
-                        <td class="px-6 py-4">
-                            S/. {{ $project->presupuesto }}
-                        </td>
-
-                        <td class="px-6 py-4">
-                            <div class="flex items-center">
-                                <form action="{{ route('admin.projects.update', $project->id) }}" method="post"
-                                    class="update-project-form" id="update-project-form-{{ $project->id }}">
-                                    @csrf
-                                    @method('PUT')
-                                    <select name="estado_proyecto"
-                                        class="border border-green-400 rounded-md py-0 px-3 w-full focus:border-green-500"
-                                        onchange="submitFormProject(event, {{ $project->id }})">
-                                        @foreach ($estados_proyecto as $estado)
-                                            <option value="{{ $estado }}"
-                                                {{ $estado == $project->estado ? 'selected' : '' }}>
-                                                {{ $estado }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </form>
-
-                            </div>
-                        </td>
-
-                        <td class="px-6 py-4 flex gap-2">
-                            <button
-                                class="cursor-pointer font-medium bg-lime-700 text-gray-100 px-3 py-1 rounded-md hover:no-underline hover:bg-lime-600">Añadir
-                                actividad</button>
-                            <button data-project-id="{{ $project->id }}"
-                                class="cursor-pointer font-medium bg-green-600 text-gray-100 px-3 py-1 rounded-md hover:no-underline hover:bg-green-700">Ver
-                                actividades</button>
-                        </td>
-                    </tr>
-                    <tr class="activity-row hidden bg-gray-100" data-project-id="{{ $project->id }}">
-                        <td colspan="6" class="p-4">
-                            <table
-                                class="w-full text-sm text-left rtl:text-right text-gray-800 border border-gray-400 ">
-                                <thead class="text-xs text-gray-100 uppercase bg-green-700">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-1">Nombre</th>
-                                        <th scope="col" class="px-6 py-1">Estado</th>
-                                        <th scope="col" class="px-6 py-1">Fecha de Inicio</th>
-                                        <th scope="col" class="px-6 py-1">Fecha de Fin</th>
-                                        <th scope="col" class="px-6 py-1">Encargado</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($project->activities as $activity)
-                                        <tr class="border border-gray-300 bg-white">
-                                            <td class="px-6 py-2">{{ $activity->nombre }}</td>
-                                            <td class="px-6 py-2 flex items-center">
-                                                <div
-                                                    class="h-3 w-3 rounded-full me-2 @if ($activity->estado == 'retrasado') bg-red-400  @elseif ($activity->estado == 'en progreso') bg-yellow-400 @else  bg-green-400 @endif ">
-                                                </div>
-                                                <span>
-                                                    {{ $activity->estado }}
-                                                </span>
-                                            </td>
-                                            <td class="px-6 py-2">
-                                                <input type="date" name="fecha_inicio"
-                                                    value="{{ $activity->fecha_inicio }}"
-                                                    onchange="submitDateForm(event, {{ $activity->id }}, 'fecha_inicio')"
-                                                    placeholder="Selecciona una fecha"
-                                                    class="border border-green-400 rounded-md py-0 px-3 w-full focus:border-green-500">
-                                            </td>
-                                            <td class="px-6 py-2">
-                                                <input type="date" name="fecha_fin"
-                                                    value="{{ $activity->fecha_fin }}"
-                                                    onchange="submitDateForm(event, {{ $activity->id }}, 'fecha_fin')"
-                                                    placeholder="Selecciona una fecha"
-                                                    class="border border-green-400 rounded-md py-0 px-3 w-full focus:border-green-500">
-                                            </td>
-                                            <td class="px-6 py-2">
-                                                <form action="{{ route('admin.activities.update', $activity->id) }}"
-                                                    method="post" class="update-activity-form"
-                                                    id="update-activity-form-{{ $activity->id }}">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <select name="manager_id"
-                                                        class="border border-green-400 rounded-md py-0 px-3 w-full focus:border-green-500"
-                                                        onchange="submitForm(event, {{ $activity->id }})">
-                                                        <option value="">sin encargado</option>
-                                                        @foreach ($encargados as $encargado)
-                                                            <option value="{{ $encargado->id }}"
-                                                                {{ $encargado->id == $activity->manager_id ? 'selected' : '' }}>
-                                                                {{ $encargado->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                @empty
-                    <tr class="bg-white border border-gray-600 text-gray-700  hover:bg-gray-50">
-                        <td class="w-4 p-4" colspan="6">
-                            <div class="text-center">
-                                No hay proyectos registrados
-                            </div>
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+        @include('admin.projects.partials.table', ['projects' => $projects])
     </div>
     <x-slot name="js">
-        {{-- Script para mostrar y ocultar la tabla de actividades --}}
         <script>
+            // Para mostrar y ocultar la tabla de actividades
             document.addEventListener('DOMContentLoaded', function() {
                 const buttons = document.querySelectorAll('button[data-project-id]');
 
@@ -217,16 +53,22 @@
                         const projectId = this.getAttribute('data-project-id');
                         const activityRow = document.querySelector(
                             `.activity-row[data-project-id="${projectId}"]`);
-
                         if (activityRow) {
                             activityRow.classList.toggle('hidden');
                         }
                     });
                 });
 
-
+                document.addEventListener('open-modal', event => {
+                    const modalId = event.detail.id;
+                    const projectId = event.detail.projectId;
+                    if (modalId === 'create-activity') {
+                        document.getElementById('project_id').value = projectId;
+                    }
+                });
             });
 
+            // funcion para limpiar el input de busqueda
             function cleanSearch() {
                 const formSearch = document.getElementById('formSearch');
                 const searchInput = document.getElementById('search');
@@ -234,10 +76,8 @@
                 searchInput.value = '';
                 formSearch.submit();
             }
-        </script>
 
-        {{-- Script para asignar un encargado --}}
-        <script>
+            // funcion para asignar un encargado
             function submitForm(event, activityId) {
                 event.preventDefault(); // Evitar que la página se recargue
                 const form = document.getElementById(`update-activity-form-${activityId}`);
@@ -275,10 +115,8 @@
                         console.error('Error:', error);
                     });
             }
-        </script>
 
-        {{-- Script para cambiar estado proyecto --}}
-        <script>
+            // funcion para cambiar estado proyecto
             function submitFormProject(event, projectId) {
                 event.preventDefault(); // Evitar que la página se recargue
                 const form = document.getElementById(`update-project-form-${projectId}`);
@@ -316,10 +154,8 @@
                         console.error('Error:', error);
                     });
             }
-        </script>
 
-        {{-- Script para cambiar la fecha de inicio y fin de una actividad --}}
-        <script>
+            // funcion para cambiar la fecha de inicio y fin de una actividad
             function submitDateForm(event, activityId, dateType) {
                 event.preventDefault(); // Evitar el envío tradicional del formulario
 
@@ -359,7 +195,13 @@
                         console.error('Error:', error);
                     });
             }
-        </script>
 
+            // funcion para buscar proyectos en tiempo real
+
+
+            // mostrar modal de añadir actividad
+
+            // mostrar modal de añadir proyecto
+        </script>
     </x-slot>
 </x-app-layout>

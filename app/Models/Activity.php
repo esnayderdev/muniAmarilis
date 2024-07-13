@@ -43,4 +43,34 @@ class Activity extends Model
     {
         return Carbon::parse($this->attributes['fecha_inicio'])->format('d-m-Y');
     }
+
+    public function scopeNoVencidas($query)
+    {
+        $today = Carbon::today();
+        return $query->where('estado', '!=', 'completado')
+                     ->where('fecha_fin', '>', $today);
+    }
+
+    public function scopeVencidas($query)
+    {
+        $today = Carbon::today();
+        return $query->where('estado', '!=', 'completado')
+                     ->where('fecha_fin', '<', $today);
+    }
+
+    public static function actualizarEstados()
+    {
+        $actividadesVencidas = self::vencidas()->get();
+        $actividadesNoVencidas = self::noVencidas()->get();
+
+        foreach ($actividadesVencidas as $activity) {
+            $activity->estado = 'retrasado';
+            $activity->save();
+        }
+
+        foreach ($actividadesNoVencidas as $activity) {
+            $activity->estado = 'en progreso';
+            $activity->save();
+        }
+    }
 }
