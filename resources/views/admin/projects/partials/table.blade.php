@@ -71,7 +71,7 @@
                         actividades</button>
                 </td>
             </tr>
-            <tr class="activity-row hidden bg-gray-100" data-project-id="{{ $project->id }}">
+            <tr class="activity-row bg-gray-100" data-project-id="{{ $project->id }}">
                 <td colspan="6" class="p-4">
                     <table class="w-full text-sm text-left rtl:text-right text-gray-800 border border-gray-400 ">
                         <thead class="text-xs text-gray-100 uppercase bg-green-700">
@@ -158,4 +158,7 @@
     </tbody>
 </table>
 
+<div class="my-4">
+    {{ $projects->links('pagination::tailwind') }}
+</div>
 @include('admin.projects.partials.modals.activity-create')

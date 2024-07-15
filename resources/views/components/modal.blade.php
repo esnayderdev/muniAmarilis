@@ -2,6 +2,7 @@
     'name',
     'show' => false,
     'maxWidth' => '2xl',
+    'errorBag' => '',
 ])
 
 @php
@@ -16,7 +17,7 @@ $maxWidth = [
 
 <div
     x-data="{
-        show: @js($show),
+        show: @js($show) || @js($errors->hasBag($errorBag)),
         focusables() {
             // All focusable element types...
             let selector = 'a, button, input:not([type=\'hidden\']), textarea, select, details, [tabindex]:not([tabindex=\'-1\'])'

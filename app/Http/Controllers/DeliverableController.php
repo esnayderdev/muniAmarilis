@@ -28,6 +28,8 @@ class DeliverableController extends Controller
 
         $deliverable->save();
 
+        $deliverable->activity->checkAndUpdateStatus();
+        
         if ($request->ajax()) {
             return response()->json(['success' => true, 'message' => $message]);
         }

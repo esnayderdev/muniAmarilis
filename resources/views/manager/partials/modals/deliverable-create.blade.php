@@ -25,8 +25,8 @@
                 <x-input-error :messages="$errors->get('fecha_entrega')" class="mt-2" />
             </div>
             <div class="w-1/2">
-                <x-input-label for="estado" :value="__('Estado')" />
-                <x-text-input id="estado" class="block mt-1 w-10 h-10" type="checkbox" name="estado"
+                <x-input-label for="estado" :value="__('Marcar como completado')" />
+                <x-text-input id="estado" class="block mt-1 w-8 h-8 border border-green-400 active:bg-green-500 checked:bg-green-500 checked:hover:bg-green-500" type="checkbox" name="estado"
                     :value="old('estado')" autofocus autocomplete="estado" />
                 <x-input-error :messages="$errors->get('estado')" class="mt-2" />
             </div>

@@ -114,4 +114,8 @@
     </tbody>
 </table>
 
+<div class="my-4">
+    {{ $activities->links('pagination::tailwind') }}
+</div>
+
 @include('manager.partials.modals.deliverable-create')

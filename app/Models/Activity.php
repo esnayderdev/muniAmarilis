@@ -73,4 +73,13 @@ class Activity extends Model
             $activity->save();
         }
     }
+    
+    public function checkAndUpdateStatus()
+    {
+        if ($this->deliverables()->where('estado', false)->count() === 0) {
+            $this->update(['estado' => 'completado']);
+        } else {
+            $this->update(['estado' => 'en progreso']);
+        }
+    }
 }
