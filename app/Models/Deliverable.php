@@ -17,8 +17,8 @@ class Deliverable extends Model
         'activity_id'
     ];
 
-    public function activities()
+    public function activity()
     {
-        return $this->hasMany(Activity::class);
+        return $this->belongsTo(Activity::class);
     }
 }

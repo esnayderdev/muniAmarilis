@@ -2,19 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Activity;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
-    public $activities_default = [
-        'Analisis de mercado',
-        'Cotización',
-        'Proformacion',
-        'Licitacion',
-        'Entrega de proyecto',
-    ];
 
     public function index(Request $request)
     {
@@ -26,26 +20,39 @@ class ProjectController extends Controller
             "terminado"
         ];
 
+        $estados_actividad = [
+            "en progreso",
+            "completado",
+            "retrasado"
+        ];
+
         $encargados = User::where('usertype', 'encargado')->get();
-        
+
+        $tipos = [
+            'Intereses públicos',
+            'Gestion Interna',
+            'Otro',
+        ];
+
         $query = Project::query();
 
         if ($search) {
             $query->where('nombre', 'LIKE', "%{$search}%");
         }
 
-        $projects = $query->get();
+        Activity::actualizarEstados(); // Actualiza el estado de las actividades a 'retrasado' si se ha pasado de la fecha fin
+        
+        $projects = $query->paginate(5);
 
-        return view('admin.projects.index', compact('projects', 'encargados', 'estados_proyecto'));
+        return view('admin.projects.index', compact('projects', 'encargados', 'estados_proyecto', 'tipos', 'estados_actividad'));
     }
 
     public function create()
     {
         $tipos = [
-            'Presupuestado',
-            'No Presupuestado',
+            'Intereses públicos',
+            'Gestion Interna',
             'Otro',
-            'No Aplica'
         ];
 
         return view('admin.projects.create', compact('tipos'));
@@ -56,24 +63,33 @@ class ProjectController extends Controller
         $request->validate([
             'nombre' => 'required|string|unique:projects,nombre',
             'descripcion' => 'nullable|string|max:255',
-            'tipo' => 'nullable|string|in:Presupuestado,No Presupuestado,Otro,No Aplica',
+            'tipo' => 'required',
             'presupuesto' => 'nullable|numeric',
         ], [
             'nombre.required' => 'El campo :attribute es obligatorio',
             'nombre.unique' => 'El campo :attribute ya existe',
+            'tipo.required' => 'El campo :attribute es obligatorio',
             'presupuesto.numeric' => 'El campo :attribute debe ser numerico',
             'descripcion.max' => 'El campo :attribute no debe ser mayor a :max caracteres',
-        ]);
-        $datos = $request->all();
-        $proyecto = Project::create($datos);
+        ], [], 'projectErrors');
 
-        $activities = array_map(function ($activity) use ($proyecto) {
-            return ['nombre' => $activity, 'project_id' => $proyecto->id];
-        }, $this->activities_default);
+        $proyecto = Project::create($request->all());
 
-        $proyecto->activities()->createMany($activities);
+        // $activities_default = [
+        //     'Analisis de mercado',
+        //     'Cotización',
+        //     'Proforma',
+        //     'Licitacion',
+        //     'Entrega de proyecto',
+        // ];
 
-        return redirect()->route('admin.projects.create')->with('success', 'Proyecto creado correctamente');
+        // $activities = array_map(function ($activity) use ($proyecto) {
+        //     return ['nombre' => $activity, 'project_id' => $proyecto->id];
+        // }, $this->activities_default);
+
+        // $proyecto->activities()->createMany($activities);
+
+        return redirect()->route('admin.projects.index')->with('success', 'Proyecto creado correctamente');
     }
 
     public function update(Request $request, $id)

@@ -25,9 +25,11 @@ Route::middleware('auth', 'admin')->group(function () {
         Route::get('admin/projects/create', 'create')->name('admin.projects.create');
         Route::post('projects', 'store')->name('admin.projects.store');
         Route::put('admin/projects/{id}', 'update')->name('admin.projects.update');
+
     });
     Route::controller(ActivityController::class)->group(function () {
         Route::put('admin/activities/{id}', 'update')->name('admin.activities.update');
+        Route::post('activities', 'store')->name('admin.activities.store');
     });
 });
 
@@ -37,6 +39,7 @@ Route::middleware('auth', 'manager')->group(function () {
     });
     Route::controller(DeliverableController::class)->group(function () {
         Route::put('manager/deliverables/{id}', 'update')->name('manager.deliverable.update');
+        Route::post('deliverables', 'store')->name('manager.deliverables.store');
     });
 });
 
